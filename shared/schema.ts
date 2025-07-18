@@ -16,6 +16,25 @@ export const brands = pgTable("brands", {
   website: text("website"),
   description: text("description"),
   isPublic: boolean("is_public").default(false),
+  
+  // Enhanced investor-focused fields
+  fundingStage: text("funding_stage"), // 'seed', 'series-a', 'series-b', 'ipo', 'acquired', 'bootstrapped'
+  totalFunding: decimal("total_funding", { precision: 12, scale: 2 }),
+  lastFundingDate: text("last_funding_date"),
+  lastFundingAmount: decimal("last_funding_amount", { precision: 12, scale: 2 }),
+  valuation: decimal("valuation", { precision: 15, scale: 2 }),
+  investors: jsonb("investors").$type<string[]>(),
+  keyExecutives: jsonb("key_executives").$type<{ name: string; role: string; background: string }[]>(),
+  businessModel: text("business_model"), // 'b2c', 'b2b', 'marketplace', 'subscription', 'licensing'
+  distributionChannels: jsonb("distribution_channels").$type<string[]>(),
+  competitiveAdvantage: text("competitive_advantage"),
+  technologyFocus: jsonb("technology_focus").$type<string[]>(),
+  sustainabilityScore: integer("sustainability_score"), // 1-100
+  brandPartnerships: jsonb("brand_partnerships").$type<string[]>(),
+  acquisitions: jsonb("acquisitions").$type<{ company: string; year: number; amount?: string }[]>(),
+  riskFactors: jsonb("risk_factors").$type<string[]>(),
+  opportunities: jsonb("opportunities").$type<string[]>(),
+  
   lastUpdated: timestamp("last_updated").defaultNow(),
 });
 

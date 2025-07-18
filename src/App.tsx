@@ -11,6 +11,28 @@ interface Brand {
   investmentScore: number;
   headquarters: string;
   description: string;
+  employees?: number;
+  website?: string;
+  isPublic?: boolean;
+  locations?: string[];
+  
+  // Enhanced investor-focused fields
+  fundingStage?: string;
+  totalFunding?: number;
+  lastFundingDate?: string;
+  lastFundingAmount?: number;
+  valuation?: number;
+  investors?: string[];
+  keyExecutives?: { name: string; role: string; background: string }[];
+  businessModel?: string;
+  distributionChannels?: string[];
+  competitiveAdvantage?: string;
+  technologyFocus?: string[];
+  sustainabilityScore?: number;
+  brandPartnerships?: string[];
+  acquisitions?: { company: string; year: number; amount?: string }[];
+  riskFactors?: string[];
+  opportunities?: string[];
 }
 
 interface Metrics {
@@ -232,16 +254,16 @@ function App() {
           {activeTab === 'brands' && (
             <div>
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-3xl font-bold text-gray-900">Sunglass Brands</h2>
+                <h2 className="text-3xl font-bold text-gray-900">Brand Database</h2>
                 <button 
                   onClick={seedData}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                 >
-                  Seed Sample Data
+                  Refresh Data
                 </button>
               </div>
               
-              <div className="bg-white shadow rounded-lg">
+              <div className="bg-white shadow-sm rounded-lg overflow-hidden">
                 <div className="px-6 py-4 border-b border-gray-200">
                   <h3 className="text-lg font-medium text-gray-900">All Brands ({brands.length})</h3>
                 </div>
@@ -250,42 +272,125 @@ function App() {
                     <thead className="bg-gray-50 sticky top-0">
                       <tr>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Brand</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Founded</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stage</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Valuation</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Growth</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       {brands.map(brand => (
                         <tr key={brand.id} className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="font-medium text-gray-900">{brand.name}</div>
-                            <div className="text-sm text-gray-500">{brand.headquarters}</div>
+                            <div className="flex items-center">
+                              <div>
+                                <div className="font-medium text-gray-900">{brand.name}</div>
+                                <div className="text-sm text-gray-500">{brand.category} • Founded {brand.founded}</div>
+                                {brand.locations && (
+                                  <div className="text-xs text-gray-400">{brand.locations.slice(0, 2).join(', ')}</div>
+                                )}
+                              </div>
+                            </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">{brand.category}</span>
+                            {brand.fundingStage && (
+                              <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                                brand.fundingStage === 'ipo' ? 'bg-green-100 text-green-800' :
+                                brand.fundingStage === 'acquired' ? 'bg-purple-100 text-purple-800' :
+                                brand.fundingStage === 'series-c' ? 'bg-blue-100 text-blue-800' :
+                                brand.fundingStage === 'series-b' ? 'bg-yellow-100 text-yellow-800' :
+                                brand.fundingStage === 'series-a' ? 'bg-orange-100 text-orange-800' :
+                                'bg-gray-100 text-gray-800'
+                              }`}>
+                                {brand.fundingStage}
+                              </span>
+                            )}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{brand.founded}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {brand.valuation ? `$${(brand.valuation / 1000000000).toFixed(1)}B` : 'N/A'}
+                          </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             ${(brand.revenue / 1000000).toFixed(0)}M
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <span className={brand.growthRate > 10 ? 'text-green-600' : 'text-gray-600'}>{brand.growthRate}%</span>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <span className={`font-medium ${brand.growthRate > 20 ? 'text-green-600' : brand.growthRate > 10 ? 'text-blue-600' : 'text-gray-600'}`}>
+                              {brand.growthRate}%
+                            </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
-                              <span className="font-medium">{brand.investmentScore}</span>
-                              <div className="ml-2 w-16 bg-gray-200 rounded-full h-2">
-                                <div className="bg-blue-600 h-2 rounded-full" style={{width: `${brand.investmentScore}%`}}></div>
+                              <span className={`font-medium ${brand.investmentScore > 85 ? 'text-green-600' : brand.investmentScore > 75 ? 'text-blue-600' : 'text-gray-600'}`}>
+                                {brand.investmentScore}
+                              </span>
+                              <div className="ml-2 w-12 bg-gray-200 rounded-full h-2">
+                                <div className={`h-2 rounded-full ${brand.investmentScore > 85 ? 'bg-green-500' : brand.investmentScore > 75 ? 'bg-blue-500' : 'bg-gray-500'}`} 
+                                     style={{width: `${brand.investmentScore}%`}}></div>
                               </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <div className="space-y-1">
+                              {brand.sustainabilityScore && (
+                                <div className="text-xs text-green-600">ESG: {brand.sustainabilityScore}/100</div>
+                              )}
+                              {brand.employees && (
+                                <div className="text-xs text-gray-500">{brand.employees.toLocaleString()} employees</div>
+                              )}
+                              {brand.businessModel && (
+                                <div className="text-xs text-blue-600">{brand.businessModel.toUpperCase()}</div>
+                              )}
                             </div>
                           </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
+                </div>
+              </div>
+
+              {/* Investment Insights */}
+              <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="bg-white p-6 rounded-lg shadow">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">🚀 High-Growth Opportunities</h3>
+                  <div className="space-y-3">
+                    {brands
+                      .filter(b => b.growthRate > 25)
+                      .sort((a, b) => b.growthRate - a.growthRate)
+                      .slice(0, 5)
+                      .map(brand => (
+                        <div key={brand.id} className="flex justify-between items-center p-3 bg-green-50 rounded">
+                          <div>
+                            <div className="font-medium text-gray-900">{brand.name}</div>
+                            <div className="text-sm text-gray-600">{brand.category} • {brand.fundingStage}</div>
+                          </div>
+                          <div className="text-right">
+                            <div className="font-medium text-green-600">{brand.growthRate}%</div>
+                            <div className="text-sm text-gray-500">growth</div>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+
+                <div className="bg-white p-6 rounded-lg shadow">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">💰 Investment Stages</h3>
+                  <div className="space-y-3">
+                    {Object.entries(
+                      brands.reduce((acc, brand) => {
+                        if (brand.fundingStage) {
+                          acc[brand.fundingStage] = (acc[brand.fundingStage] || 0) + 1;
+                        }
+                        return acc;
+                      }, {} as Record<string, number>)
+                    ).map(([stage, count]) => (
+                      <div key={stage} className="flex justify-between items-center">
+                        <span className="font-medium capitalize">{stage.replace('-', ' ')}</span>
+                        <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">{count}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
