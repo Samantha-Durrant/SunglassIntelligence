@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SunglassIntelligence - Market Intelligence Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/chart.js"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-6">
+                    <div class="flex items-center">
+                        <h1 class="text-2xl font-bold text-gray-900">🕶️ SunglassIntelligence</h1>
+                        <span class="ml-3 px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">Live</span>
+                    </div>
+                    <nav class="flex space-x-8">
+                        <a href="#dashboard" onclick="showSection('dashboard')" class="nav-link text-blue-600 font-medium">Dashboard</a>
+                        <a href="#brands" onclick="showSection('brands')" class="nav-link text-gray-600 hover:text-gray-900">Brands</a>
+                        <a href="#analytics" onclick="showSection('analytics')" class="nav-link text-gray-600 hover:text-gray-900">Analytics</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <div class="px-4 py-6 sm:px-0">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Market Overview</h2>
+                    
+                    <!-- KPI Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                        <span class="text-white font-bold text-sm">B</span>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium text-gray-500">Total Brands</p>
+                                    <p class="text-2xl font-bold text-gray-900" id="totalBrands">Loading...</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                        <span class="text-white font-bold text-sm">$</span>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium text-gray-500">Total Revenue</p>
+                                    <p class="text-2xl font-bold text-gray-900" id="totalRevenue">Loading...</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                                        <span class="text-white font-bold text-sm">↗</span>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium text-gray-500">Avg Growth Rate</p>
+                                    <p class="text-2xl font-bold text-gray-900" id="avgGrowth">Loading...</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+                                        <span class="text-white font-bold text-sm">%</span>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium text-gray-500">Market Share</p>
+                                    <p class="text-2xl font-bold text-gray-900" id="marketShare">Loading...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Overview Chart -->
+                    <div class="bg-white shadow rounded-lg p-6 mb-8">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Market Overview</h3>
+                        <div class="h-64 flex items-center justify-center bg-gray-50 rounded">
+                            <canvas id="overviewChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Brands Section -->
+            <section id="brands" class="section hidden">
+                <div class="px-4 py-6 sm:px-0">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-3xl font-bold text-gray-900">Sunglass Brands</h2>
+                        <button onclick="seedData()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            Seed Sample Data
+                        </button>
+                    </div>
+                    
+                    <!-- Brands Table -->
+                    <!-- Brands Table -->
+                    <div class="bg-white shadow rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">All Brands</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Brand</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Founded</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Growth</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="brandsList" class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">Loading brands...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics" class="section hidden">
+                <div class="px-4 py-6 sm:px-0">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Market Analytics</h2>
+                    
+                    <!-- Analytics Charts -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        <div class="bg-white shadow rounded-lg p-6">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Revenue Distribution</h3>
+                            <div class="h-64 flex items-center justify-center">
+                                <canvas id="revenueChart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white shadow rounded-lg p-6">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Growth Rate Analysis</h3>
+                            <div class="h-64 flex items-center justify-center">
+                                <canvas id="growthChart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Category Analysis -->
+                    <div class="bg-white shadow rounded-lg p-6">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Category Breakdown</h3>
+                        <div id="categoryAnalysis" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="text-center p-4 bg-gray-50 rounded">
+                                <div class="text-2xl font-bold text-blue-600" id="luxuryCount">-</div>
+                                <div class="text-sm text-gray-600">Luxury Brands</div>
+                            </div>
+                            <div class="text-center p-4 bg-gray-50 rounded">
+                                <div class="text-2xl font-bold text-green-600" id="sportsCount">-</div>
+                                <div class="text-sm text-gray-600">Sports Brands</div>
+                            </div>
+                            <div class="text-center p-4 bg-gray-50 rounded">
+                                <div class="text-2xl font-bold text-purple-600" id="d2cCount">-</div>
+                                <div class="text-sm text-gray-600">D2C Brands</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <style>
+        .section {
+            display: block;
+        }
+        .section.hidden {
+            display: none;
+        }
+        .nav-link.active {
+            color: #2563eb !important;
+            font-weight: 600;
+        }
+    </style>
+
+    <script>
+        // API Base URL
+        const API_BASE = window.location.origin;
+        let brandsData = [];
+
+        // Navigation functionality
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.remove('hidden');
+            
+            // Update navigation styling
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active', 'text-blue-600', 'font-medium');
+                link.classList.add('text-gray-600');
+            });
+            
+            // Highlight active nav
+            event.target.classList.add('active', 'text-blue-600', 'font-medium');
+            event.target.classList.remove('text-gray-600');
+            
+            // Load section-specific data
+            if (sectionId === 'analytics') {
+                loadAnalytics();
+            }
+        }
+
+        // Load metrics
+        async function loadMetrics() {
+            try {
+                const response = await fetch(`${API_BASE}/api/metrics`);
+                const data = await response.json();
+                
+                document.getElementById('totalBrands').textContent = data.totalBrands || 0;
+                document.getElementById('totalRevenue').textContent = `$${(data.totalRevenue / 1000000).toFixed(1)}M`;
+                document.getElementById('avgGrowth').textContent = `${data.avgGrowthRate}%`;
+                document.getElementById('marketShare').textContent = `${data.totalMarketShare}%`;
+            } catch (error) {
+                console.error('Error loading metrics:', error);
+            }
+        }
+
+        // Load brands
+        async function loadBrands() {
+            try {
+                const response = await fetch(`${API_BASE}/api/brands`);
+                brandsData = await response.json();
+                
+                // Update dashboard table
+                updateDashboardTable();
+                // Update brands page table
+                updateBrandsTable();
+                // Update analytics if visible
+                if (!document.getElementById('analytics').classList.contains('hidden')) {
+                    loadAnalytics();
+                }
+            } catch (error) {
+                console.error('Error loading brands:', error);
+                document.getElementById('brandsTable').innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">Error loading brands</td></tr>';
+            }
+        }
+
+        // Update dashboard table (top 5 brands)
+        function updateDashboardTable() {
+            const tableBody = document.getElementById('brandsTable');
+            
+            if (brandsData.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No brands found. Click "Seed Sample Data" to add some.</td></tr>';
+                return;
+            }
+            
+            const topBrands = brandsData.slice(0, 5);
+            tableBody.innerHTML = topBrands.map(brand => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="font-medium text-gray-900">${brand.name}</div>
+                        <div class="text-sm text-gray-500">${brand.headquarters}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">${brand.category}</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        $${(brand.revenue / 1000000).toFixed(0)}M
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <span class="${brand.growthRate > 10 ? 'text-green-600' : 'text-gray-600'}">${brand.growthRate}%</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <div class="flex items-center">
+                            <span class="font-medium">${brand.investmentScore}</span>
+                            <div class="ml-2 w-16 bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full" style="width: ${brand.investmentScore}%"></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Update brands page table (all brands)
+        function updateBrandsTable() {
+            const tableBody = document.getElementById('brandsList');
+            
+            if (brandsData.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">No brands found. Click "Seed Sample Data" to add some.</td></tr>';
+                return;
+            }
+            
+            tableBody.innerHTML = brandsData.map(brand => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="font-medium text-gray-900">${brand.name}</div>
+                        <div class="text-sm text-gray-500">${brand.headquarters}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">${brand.category}</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${brand.founded}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        $${(brand.revenue / 1000000).toFixed(0)}M
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <span class="${brand.growthRate > 10 ? 'text-green-600' : 'text-gray-600'}">${brand.growthRate}%</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <div class="flex items-center">
+                            <span class="font-medium">${brand.investmentScore}</span>
+                            <div class="ml-2 w-16 bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full" style="width: ${brand.investmentScore}%"></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Load analytics data
+        function loadAnalytics() {
+            if (brandsData.length === 0) return;
+            
+            // Category breakdown
+            const categories = brandsData.reduce((acc, brand) => {
+                acc[brand.category] = (acc[brand.category] || 0) + 1;
+                return acc;
+            }, {});
+            
+            document.getElementById('luxuryCount').textContent = categories['Luxury'] || 0;
+            document.getElementById('sportsCount').textContent = categories['Sports'] || 0;
+            document.getElementById('d2cCount').textContent = categories['D2C'] || 0;
+            
+            // Create charts if Chart.js is available
+            if (typeof Chart !== 'undefined') {
+                createCharts();
+            }
+        }
+
+        // Create charts
+        function createCharts() {
+            // Revenue chart
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            new Chart(revenueCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: brandsData.slice(0, 5).map(b => b.name),
+                    datasets: [{
+                        data: brandsData.slice(0, 5).map(b => b.revenue / 1000000),
+                        backgroundColor: ['#3B82F6', '#10B981', '#8B5CF6', '#F59E0B', '#EF4444']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // Growth chart
+            const growthCtx = document.getElementById('growthChart').getContext('2d');
+            new Chart(growthCtx, {
+                type: 'bar',
+                data: {
+                    labels: brandsData.slice(0, 5).map(b => b.name),
+                    datasets: [{
+                        label: 'Growth Rate %',
+                        data: brandsData.slice(0, 5).map(b => b.growthRate),
+                        backgroundColor: '#10B981'
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        // Seed data
+        async function seedData() {
+            try {
+                const response = await fetch(`${API_BASE}/api/seed`, { method: 'POST' });
+                const result = await response.json();
+                alert(result.message);
+                loadMetrics();
+                loadBrands();
+            } catch (error) {
+                console.error('Error seeding data:', error);
+                alert('Error seeding data');
+            }
+        }
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadMetrics();
+            loadBrands();
+        });
+    </script>
+</body>
+</html>

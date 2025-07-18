@@ -1,0 +1,14 @@
+# Render.com deployment configuration
+
+# Build settings
+buildCommand: npm install && npm run build
+startCommand: node server-js.js
+
+# Environment
+node: 18
+
+# Health check
+healthCheckPath: /api/metrics
+
+# Auto-deploy
+branch: main

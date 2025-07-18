@@ -1,4 +1,5 @@
 import { MemStorage } from './server/storage.js';
+import { seedDatabase } from './server/seed-data.ts';
 
 const storage = new MemStorage();
 
